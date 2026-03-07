@@ -5,36 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartão de Aniversário - Ohana!</title>
     <style>
-        /* Estilos base */
+        :root {
+            --primary: #3f51b5;
+            --secondary: #ff4081;
+            --bg-light: #e0f7fa;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #e0f7fa; 
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM4MWQ0ZmEiIGZpbGwtb3BhY2l0eT0iMC4zIj48cGF0aCBkPSJNMCAwaDQwdjQwSDBWMHptMjAgMjBoMjB2MjBIMjBWMjB6TTAgMjBoMjB2MjBIMFYyMHoyMCAwaDIwdjIwSDIwVjB6Ii8+PC9nPjwvZz48L3N2Zz4=');
-            font-family: 'Comic Sans MS', 'Arial', sans-serif;
-            overflow: hidden; /* Evita rolagem desnecessária no mobile */
+            background-color: var(--bg-light);
+            background-image: radial-gradient(#81d4fa 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: bgMove 10s linear infinite;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        @keyframes bgMove {
+            from { background-position: 0 0; }
+            to { background-position: 60px 60px; }
         }
 
         .card {
             position: relative;
-            width: 280px; /* Reduzi um pouco para telas de celulares menores */
-            height: 420px;
+            width: 300px;
+            height: 440px;
             cursor: pointer;
             transform-style: preserve-3d;
             transform: perspective(2500px);
             transition: 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Abre no hover (computador) ou quando a classe 'open' é adicionada (celular) */
+        .card.open::before {
+            content: '';
+            position: absolute;
+            top: -15px; left: -15px; right: -15px; bottom: -15px;
+            background: linear-gradient(45deg, #ff00ea, #00d2ff, #00ffaa, #fffb00);
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(25px);
+            opacity: 0.6;
+            border-radius: 25px;
+            animation: glow 10s linear infinite;
+        }
+
+        @keyframes glow {
+            0% { background-position: 0 0; }
+            50% { background-position: 400% 0; }
+            100% { background-position: 0 0; }
+        }
+
         .card:hover .front, .card.open .front {
             transform: rotateY(-160deg);
+            box-shadow: 20px 0 50px rgba(0,0,0,0.5);
         }
 
         .front {
-            background-color: #3f51b5;
+            background: linear-gradient(135deg, var(--primary), #1a237e);
             width: 100%;
             height: 100%;
             border-radius: 15px;
@@ -46,31 +77,41 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
-            border: 5px solid #fff;
+            border: 6px solid #fff;
             padding: 20px;
             box-sizing: border-box;
             color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             backface-visibility: hidden;
         }
 
         .stitch-img {
-            width: 100%; /* Ajusta ao tamanho do cartão */
-            max-width: 240px;
-            height: auto;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+            width: 90%;
+            max-width: 220px;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
             animation: float 3s infinite ease-in-out;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
-        .front h1 { font-size: 1.8em; margin: 0; text-align: center; }
-        .front p { font-size: 0.8em; opacity: 0.9; margin-top: 5px; }
+        .front h1 { 
+            font-size: 2em; 
+            margin: 15px 0 0; 
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+        }
+
+        .pulse-text {
+            font-size: 0.9em;
+            margin-top: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
 
         .back {
             background-color: #fff;
@@ -81,36 +122,106 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
             box-sizing: border-box;
             text-align: center;
             position: absolute;
             z-index: 1;
         }
 
-        .back h2 { color: #3f51b5; font-size: 1.4em; margin-bottom: 5px; }
-        .back p { font-size: 1em; color: #444; line-height: 1.3; }
-        .quote { font-style: italic; color: #0d47a1; font-weight: bold; margin: 10px 0; font-size: 0.85em; }
-        .signature { margin-top: 15px; color: #ff4081; font-weight: bold; }
+        .back h2 { color: var(--primary); margin-bottom: 10px; }
+        .quote { 
+            background: #f0f4ff;
+            padding: 10px;
+            border-left: 4px solid var(--primary);
+            font-style: italic; 
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        /* Confetes/Fagulhas */
+        .spark {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card" onclick="this.classList.toggle('open')">
+    <audio id="fireworksSound" preload="auto">
+        <source src="Fogos de Artifício 1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card" id="myCard" onclick="handleCardClick(this)">
         <div class="front">
             <img src="stitch-bolo.png" alt="Stitch no Bolo" class="stitch-img">
             <h1>SURPRESA!</h1>
-            <p>Toque para abrir ✨</p>
+            <p class="pulse-text">Clique para abrir ✨</p>
         </div>
         
         <div class="back">
-            <div style="font-size: 40px;">🎁</div>
+            <div style="font-size: 50px; margin-bottom: 10px;">🎁</div>
             <h2>Feliz Aniversário!</h2>
-            <p>Que seu dia seja tão doce e alegre quanto o Stitch!</p>
-            <p class="quote">"'Ohana quer dizer família. Família quer dizer nunca abandonar ou esquecer."</p>
-            <div class="signature">Com muito carinho!</div>
+            <p>Para você, que é um ser humano incrível lhe desejo um Feliz aniversário 🌹</p>
+            <p class="quote">"'Ohana quer dizer família. Família quer dizer nunca abandonar ou esquecer"</p>
+            <div class="signature">Com muito carinho! do seu cara da TI ❤️</div>
         </div>
     </div>
+
+    <script>
+        function handleCardClick(card) {
+            const isOpening = !card.classList.contains('open');
+            card.classList.toggle('open');
+            
+            if(isOpening) {
+                // Toca o som de fogos
+                const audio = document.getElementById('fireworksSound');
+                audio.currentTime = 0; // Reinicia o som se clicar rápido
+                audio.play().catch(e => console.log("Áudio bloqueado pelo navegador"));
+
+                // Cria explosão de fagulhas
+                for(let i=0; i<60; i++) {
+                    createSpark();
+                }
+            }
+        }
+
+        function createSpark() {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            
+            const colors = ['#FFD700', '#FF4081', '#00E676', '#2979FF', '#FF5722'];
+            spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Movimento aleatório em 360 graus
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 100 + Math.random() * 200;
+            const x = Math.cos(angle) * velocity + 'px';
+            const y = Math.sin(angle) * velocity + 'px';
+            
+            spark.style.setProperty('--x', x);
+            spark.style.setProperty('--y', y);
+            
+            // Posição inicial no centro
+            spark.style.left = '50%';
+            spark.style.top = '50%';
+            
+            spark.style.animation = `explode ${0.5 + Math.random()}s ease-out forwards`;
+            
+            document.getElementById('myCard').appendChild(spark);
+            
+            setTimeout(() => spark.remove(), 1500);
+        }
+    </script>
 
 </body>
 </html>

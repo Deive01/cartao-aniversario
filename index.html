@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartão de Aniversário - Ohana!</title>
+
     <style>
         :root {
             --primary: #3f51b5;
@@ -17,40 +18,80 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: var(--bg-light);
-            background-image: radial-gradient(#81d4fa 1px, transparent 1px);
-            background-size: 30px 30px;
-            animation: bgMove 10s linear infinite;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e0f7fa, #b3e5fc, #e1f5fe);
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
+            position: relative;
         }
 
-        @keyframes bgMove {
-            from { background-position: 0 0; }
-            to { background-position: 60px 60px; }
+        /* Partículas Brancas */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+            opacity: .5;
+            animation: floatParticle linear infinite;
         }
 
+        @keyframes floatParticle {
+            from { transform: translateY(100vh); }
+            to { transform: translateY(-10vh); }
+        }
+
+        /* Corações Subindo */
+        .heart-particle {
+            position: absolute;
+            bottom: -50px;
+            font-size: 20px;
+            color: #ff4081;
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: -1;
+            animation: rise linear forwards;
+        }
+
+        /* Stitchs Subindo */
+        .stitch-particle {
+            position: absolute;
+            bottom: -70px;
+            width: 40px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: -1;
+            animation: rise linear forwards;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Cartão */
         .card {
             position: relative;
-            width: 300px;
-            height: 440px;
+            width: 320px;
+            height: 460px;
             cursor: pointer;
             transform-style: preserve-3d;
             transform: perspective(2500px);
-            transition: 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 1s;
+            z-index: 10;
         }
 
         .card.open::before {
-            content: '';
+            content: "";
             position: absolute;
-            top: -15px; left: -15px; right: -15px; bottom: -15px;
+            inset: -20px;
+            border-radius: 20px;
             background: linear-gradient(45deg, #ff00ea, #00d2ff, #00ffaa, #fffb00);
             background-size: 400%;
-            z-index: -1;
             filter: blur(25px);
-            opacity: 0.6;
-            border-radius: 25px;
-            animation: glow 10s linear infinite;
+            z-index: -1;
+            animation: glow 8s linear infinite;
+            opacity: .7;
         }
 
         @keyframes glow {
@@ -59,9 +100,10 @@
             100% { background-position: 0 0; }
         }
 
-        .card:hover .front, .card.open .front {
+        .card:hover .front,
+        .card.open .front {
             transform: rotateY(-160deg);
-            box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+            box-shadow: 20px 0 50px rgba(0,0,0,.5);
         }
 
         .front {
@@ -77,44 +119,35 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 6px solid #fff;
+            border: 6px solid white;
             padding: 20px;
             box-sizing: border-box;
-            color: #fff;
+            color: white;
             backface-visibility: hidden;
         }
 
         .stitch-img {
-            width: 90%;
-            max-width: 220px;
-            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
-            animation: float 3s infinite ease-in-out;
+            width: 200px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,.4));
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-18px); }
         }
 
-        .front h1 { 
-            font-size: 2em; 
-            margin: 15px 0 0; 
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
-        }
+        .front h1 { margin-top: 15px; font-size: 2em; }
 
-        .pulse-text {
-            font-size: 0.9em;
-            margin-top: 10px;
-            animation: pulse 1.5s infinite;
-        }
+        .pulse { animation: pulse 1.5s infinite; }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
+            0%, 100% { opacity: .6; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.1); }
         }
 
         .back {
-            background-color: #fff;
+            background: white;
             width: 100%;
             height: 100%;
             border-radius: 15px;
@@ -129,99 +162,161 @@
             z-index: 1;
         }
 
-        .back h2 { color: var(--primary); margin-bottom: 10px; }
-        .quote { 
+        .quote {
             background: #f0f4ff;
             padding: 10px;
             border-left: 4px solid var(--primary);
-            font-style: italic; 
             margin: 15px 0;
-            font-size: 0.9em;
+            font-style: italic;
+            font-size: .9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        /* Confetes/Fagulhas */
-        .spark {
+        /* Estilo do novo Emoji do Stitch */
+        .emoji-stitch {
+            height: 1.8em; /* Ajustado para destacar na frase */
+            width: auto;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .back p { line-height: 1.4; }
+
+        /* Confetes */
+        .confetti {
             position: absolute;
             width: 8px;
             height: 8px;
-            border-radius: 50%;
             pointer-events: none;
-            z-index: 10;
+            animation: explode .9s ease-out forwards;
         }
 
         @keyframes explode {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            0% { transform: translate(0,0) scale(1); opacity: 1; }
             100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <audio id="fireworksSound" preload="auto">
+    <audio id="fireworksSound">
         <source src="Fogos de Artifício 1.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="card" id="myCard" onclick="handleCardClick(this)">
+    <audio id="bgMusic" loop>
+        <source src="musica-fundo.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card" id="card">
         <div class="front">
-            <img src="stitch-bolo.png" alt="Stitch no Bolo" class="stitch-img">
+            <img src="stitch-bolo.png" class="stitch-img">
             <h1>SURPRESA!</h1>
-            <p class="pulse-text">Clique para abrir ✨</p>
+            <p class="pulse">Clique para abrir ✨</p>
         </div>
-        
+
         <div class="back">
-            <div style="font-size: 50px; margin-bottom: 10px;">🎁</div>
-            <h2>Feliz Aniversário!</h2>
-            <p>Para você, que é um ser humano incrível lhe desejo um Feliz aniversário 🌹</p>
-            <p class="quote">"'Ohana quer dizer família. Família quer dizer nunca abandonar ou esquecer"</p>
-            <div class="signature">Com muito carinho! do seu cara da TI ❤️</div>
+            <div style="font-size:50px;">🎁</div>
+            <h2>Feliz Aniversário Rany!</h2>
+            <p>Rany, seu brilho é único e sua energia contagia. Que seu dia seja tão lindo quanto o seu sorriso. 🌹</p>
+            
+            <p class="quote">
+                "Ohana quer dizer família. Família quer dizer nunca abandonar ou esquecer"
+                <img src="sticker_4.jpg" class="emoji-stitch pulse" alt="Stitch Emoji">
+            </p>
+
+            <div style="font-size: 0.85em; color: #555;">
+                Com muito carinho! do seu cara da TI e seu fã Numero 1 ❤️
+            </div>
         </div>
     </div>
 
     <script>
-        function handleCardClick(card) {
-            const isOpening = !card.classList.contains('open');
-            card.classList.toggle('open');
-            
-            if(isOpening) {
-                // Toca o som de fogos
-                const audio = document.getElementById('fireworksSound');
-                audio.currentTime = 0; // Reinicia o som se clicar rápido
-                audio.play().catch(e => console.log("Áudio bloqueado pelo navegador"));
+        const card = document.getElementById("card");
+        const fireworksSound = document.getElementById("fireworksSound");
+        const bgMusic = document.getElementById("bgMusic");
 
-                // Cria explosão de fagulhas
-                for(let i=0; i<60; i++) {
-                    createSpark();
+        const stitchImages = [
+            'stitch_smile.png',
+            'stitch_wink.png',
+            'stitch_heart_eyes.png',
+            'stitch_blush.png'
+        ];
+
+        card.addEventListener("click", () => {
+            const opening = !card.classList.contains("open");
+            card.classList.toggle("open");
+
+            if (opening) {
+                fireworksSound.currentTime = 0;
+                fireworksSound.play().catch(e => console.log("Áudio bloqueado."));
+                bgMusic.volume = 0.3; 
+                bgMusic.play().catch(e => console.log("Música bloqueada."));
+
+                for (let i = 0; i < 80; i++) {
+                    createConfetti();
                 }
             }
-        }
+        });
 
-        function createSpark() {
-            const spark = document.createElement('div');
-            spark.className = 'spark';
-            
-            const colors = ['#FFD700', '#FF4081', '#00E676', '#2979FF', '#FF5722'];
-            spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Movimento aleatório em 360 graus
+        function createConfetti() {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            const colors = ["#ff4081", "#00e676", "#2979ff", "#ff9800", "#ffd700"];
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+
             const angle = Math.random() * Math.PI * 2;
-            const velocity = 100 + Math.random() * 200;
-            const x = Math.cos(angle) * velocity + 'px';
-            const y = Math.sin(angle) * velocity + 'px';
-            
-            spark.style.setProperty('--x', x);
-            spark.style.setProperty('--y', y);
-            
-            // Posição inicial no centro
-            spark.style.left = '50%';
-            spark.style.top = '50%';
-            
-            spark.style.animation = `explode ${0.5 + Math.random()}s ease-out forwards`;
-            
-            document.getElementById('myCard').appendChild(spark);
-            
-            setTimeout(() => spark.remove(), 1500);
-        }
-    </script>
+            const velocity = 120 + Math.random() * 200;
+            const x = Math.cos(angle) * velocity + "px";
+            const y = Math.sin(angle) * velocity + "px";
 
+            confetti.style.setProperty("--x", x);
+            confetti.style.setProperty("--y", y);
+            confetti.style.left = "50%";
+            confetti.style.top = "50%";
+
+            card.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 1000);
+        }
+
+        for (let i = 0; i < 40; i++) {
+            const p = document.createElement("div");
+            p.className = "particle";
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.animationDuration = 5 + Math.random() * 10 + "s";
+            p.style.opacity = Math.random();
+            document.body.appendChild(p);
+        }
+
+        function createHearts() {
+            const heart = document.createElement("div");
+            heart.className = "heart-particle";
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            const size = Math.random() * 15 + 15 + "px";
+            heart.style.fontSize = size;
+            const duration = Math.random() * 3 + 4;
+            heart.style.animationDuration = duration + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), duration * 1000);
+        }
+
+        function createStitchParticles() {
+            const stitch = document.createElement("img");
+            stitch.className = "stitch-particle";
+            const randomImage = stitchImages[Math.floor(Math.random() * stitchImages.length)];
+            stitch.src = randomImage;
+            stitch.style.left = Math.random() * 100 + "vw";
+            const duration = Math.random() * 3 + 4;
+            stitch.style.animationDuration = duration + "s";
+            document.body.appendChild(stitch);
+            setTimeout(() => stitch.remove(), duration * 1000);
+        }
+
+        setInterval(createHearts, 200);
+        setInterval(createStitchParticles, 350);
+    </script>
 </body>
 </html>

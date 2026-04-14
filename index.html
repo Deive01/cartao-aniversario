@@ -100,7 +100,7 @@
             100% { background-position: 0 0; }
         }
 
-        .card:hover .front,
+        /* MUDANÇA AQUI: Removido o :hover para não abrir sozinho no PC */
         .card.open .front {
             transform: rotateY(-160deg);
             box-shadow: 20px 0 50px rgba(0,0,0,.5);
@@ -175,9 +175,8 @@
             gap: 8px;
         }
 
-        /* Estilo do novo Emoji do Stitch */
         .emoji-stitch {
-            height: 1.8em; /* Ajustado para destacar na frase */
+            height: 1.8em;
             width: auto;
             vertical-align: middle;
             display: inline-block;
@@ -281,6 +280,7 @@
             setTimeout(() => confetti.remove(), 1000);
         }
 
+        // Criar partículas de fundo
         for (let i = 0; i < 40; i++) {
             const p = document.createElement("div");
             p.className = "particle";
